@@ -40,6 +40,13 @@ const createProduct = async (newProduct) => {
   return result.rows[0];
 };
 
+// Associate a product with a category
+const associateProductWithCategory = async (productId, categoryId) => {
+  const query =
+    "INSERT INTO Product_Categories (product_id, category_id) VALUES ($1, $2)";
+  await pool.query(query, [productId, categoryId]);
+};
+
 // Update a product by ID
 const updateProduct = async (productId, updatedProduct) => {
   const { name, price, description } = updatedProduct;
@@ -73,4 +80,5 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  associateProductWithCategory,
 };

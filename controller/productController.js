@@ -1,4 +1,5 @@
 const ProductModel = require("../models/productModel");
+const CategoryModel = require("../models/categoryModel");
 
 // get all products or products by category
 exports.getAllProducts = async (req, res) => {
@@ -42,8 +43,20 @@ exports.getProductById = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const newProduct = req.body;
+    const categoryId = req.body.category_id; 
 
+    // Check if the category exists
+    const category = await CategoryModel.getCategoryById(categoryId);
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    // Create the product and associate it with the category
     const createdProduct = await ProductModel.createProduct(newProduct);
+    await ProductModel.associateProductWithCategory(
+      createdProduct.product_id,
+      categoryId
+    );
 
     res.status(201).json(createdProduct);
   } catch (error) {

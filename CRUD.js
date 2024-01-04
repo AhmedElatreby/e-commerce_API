@@ -1,3 +1,4 @@
+// USER
 // add user
 // POST http://localhost:3000/users
 
@@ -13,6 +14,7 @@
 // Delete
 // DELETE  http://localhost:3000/users/:id
 
+// AUTH
 
 // Login
 // POST  http://localhost:3000/auth/login
@@ -20,4 +22,36 @@
 // Logout
 // POST  http://localhost:3000/auth/logout
 
+// categories
 
+// Retrieve all categories
+//GET http://localhost:3000/categories/
+
+// Retrieve a single category by ID
+// GET http://localhost:3000/categories/:categoryId
+
+// Create a new category
+// POST http://localhost:3000/categories/
+
+// Update a category by ID
+// PUT http://localhost:3000/categories/:categoryId
+
+// Delete a category by ID
+// delete http://localhost:3000/categories/:categoryId
+
+// products
+
+// Retrieve all products or products by category
+//GET http://localhost:3000/products/
+
+// Retrieve a single product by ID
+//GET http://localhost:3000/products/:productId
+
+// Create a new product
+// POST http://localhost:3000/products/
+
+// Update a product by ID
+// PUT http://localhost:3000/products/:productId
+
+// Delete a product by ID
+// delete http://localhost:3000/products/:productId
