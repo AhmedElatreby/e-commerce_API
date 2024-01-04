@@ -44,8 +44,15 @@ const deleteUser = async (userId) => {
 
 const updateUser = async (userId, updatedUser) => {
   const result = await query(
-    "UPDATE Users SET username = $1, password = $2, email = $3 WHERE user_id = $4 RETURNING *",
-    [updatedUser.username, updatedUser.password, updatedUser.email, userId]
+    "UPDATE Users SET username = $1, password = $2, email = $3, first_name = $4, last_name = $5  WHERE user_id = $6 RETURNING *",
+    [
+      updatedUser.username,
+      updatedUser.password,
+      updatedUser.email,
+      updatedUser.first_name,
+      updatedUser.last_name,
+      userId,
+    ]
   );
   return result.rows[0];
 };

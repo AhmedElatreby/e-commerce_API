@@ -1,10 +1,8 @@
-const express = require("express");
-const router = express.Router();
+const passport = require("passport");
 const UserModel = require("../models/user");
 
-router.post("/register", async (req, res) => {
+exports.createUser = async (req, res) => {
   try {
-    console.log(req.body);
     const { username, password, email, first_name, last_name } = req.body;
 
     const existingUser = await UserModel.getUserByUsername(username);
@@ -27,6 +25,68 @@ router.post("/register", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
+};
 
-module.exports = router;
+exports.getAllUsers = async (req, res) => {
+  try {
+    const allUsers = await UserModel.getAllUsers();
+    res.json(allUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+exports.getUserById = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    if (!Number.isInteger(Number(userId))) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    const user = await UserModel.getUserById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const updatedUser = req.body;
+    const user = await UserModel.updateUser(userId, updatedUser);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await UserModel.deleteUser(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};

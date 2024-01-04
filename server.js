@@ -9,8 +9,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const PgSession = require("connect-pg-simple")(session);
 const pool = require("./db/db");
-const authRoutes = require("./routes/authRoutes"); // Add this line
-const dashboardRoutes = require("./routes/dashboardRoutes"); // Add this line
+const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 const port = 3000;
@@ -56,6 +57,7 @@ app.use((req, res, next) => {
 
 // User routes
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
 app.use("/dashboard", dashboardRoutes);
 
 app.listen(port, () => {

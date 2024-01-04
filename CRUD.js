@@ -1,14 +1,23 @@
-// get all users 
-// GET http://localhost:3000/auth/user
+// add user
+// POST http://localhost:3000/users
 
-// Get all user by ID 
-// GET http://localhost:3000/auth/user/:id
+// get all users
+// GET http://localhost:3000/users
+
+// Get user by ID
+// GET http://localhost:3000/users/:userId
 
 // update user
-// PUT http://localhost:3000/auth/user/:id
+// PUT http://localhost:3000/users/:userId
 
-// add user
-// POST http://localhost:3000/auth/register
+// Delete
+// DELETE  http://localhost:3000/users/:id
+
 
 // Login
 // POST  http://localhost:3000/auth/login
+
+// Logout
+// POST  http://localhost:3000/auth/logout
+
+
