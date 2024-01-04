@@ -9,3 +9,6 @@
 
 // add user
 // POST http://localhost:3000/auth/register
+
+// Login
+// POST  http://localhost:3000/auth/login

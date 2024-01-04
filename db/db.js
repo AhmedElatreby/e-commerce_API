@@ -1,20 +1,31 @@
 const { Pool } = require("pg");
+
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "ecomm_db",
-  password: "postgres",
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
-const query = async (text, params) => {
-  const start = Date.now();
-  const result = await pool.query(text, params);
-  const duration = Date.now() - start;
-  console.log("Executed query:", { text, duration, rows: result.rowCount });
-  return result;
-};
+// Promisify the query function
+pool.query = promisify(pool.query);
 
-module.exports = {
-  query,
-};
+function promisify(func) {
+  return function (...args) {
+    return new Promise((resolve, reject) => {
+      func.apply(pool, [
+        ...args,
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        },
+      ]);
+    });
+  };
+}
+
+module.exports = pool;
