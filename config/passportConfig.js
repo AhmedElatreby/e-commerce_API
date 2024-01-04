@@ -38,6 +38,7 @@ passport.use(new LocalStrategy({ usernameField: "email" }, authenticateUser));
 
 // Serialize the user to store in the session
 passport.serializeUser((user, done) => {
+  console.log("Serializing user:", user);
   done(null, user.user_id);
 });
 
@@ -49,6 +50,9 @@ passport.deserializeUser(async (id, done) => {
 
     // Extract the user from the query result
     const user = result.rows[0];
+
+    // Log the user during deserialization
+    console.log("Deserialized user:", user);
 
     // Return the user
     done(null, user);
@@ -68,7 +72,9 @@ function initializePassport(passport) {
 
   passport.deserializeUser(async (id, done) => {
     try {
-      const result = await query("SELECT * FROM Users WHERE user_id = $1", [id]);
+      const result = await query("SELECT * FROM Users WHERE user_id = $1", [
+        id,
+      ]);
       const user = result.rows[0];
       done(null, user);
     } catch (error) {

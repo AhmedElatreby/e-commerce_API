@@ -21,6 +21,7 @@ exports.postLogin = (req, res, next) => {
         console.error(err);
         return next(err);
       }
+      req.session.user = user; 
       console.log("Authentication successful:", req.user);
       return res.redirect("/dashboard");
     });

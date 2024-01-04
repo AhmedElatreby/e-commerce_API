@@ -9,11 +9,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const PgSession = require("connect-pg-simple")(session);
 const pool = require("./db/db");
-const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/authRoutes");
-const dashboardRoutes = require("./routes/dashboardRoutes");
-const productRoutes = require("./routes/productRoutes");
-const categoryRoutes = require("./routes/categoryRoutes");
+
 const morgan = require("morgan");
 const helmet = require("helmet");
 
@@ -41,15 +37,18 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 1 * 24 * 60 * 60 * 1000, // 1 days
-      secure: true, // Change to true if using HTTPS
+      secure: false, // Change to true if using HTTPS
       httpOnly: true,
     },
   })
 );
 
-console.log("POOL:  ", pool);
+// console.log("POOL:  ", pool);
+
+// Use Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(flash());
 app.use(cors());
 app.use(morgan("dev"));
@@ -66,15 +65,28 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something went wrong!");
 });
 
+const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const productRoutes = require("./routes/productRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+
 // User routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
+app.use("/cart", cartRoutes);
 
 app.use((req, res) => {
   res.status(404).send("Not Found");
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+  process.exit(1); // Exit the process or perform recovery logic
 });
 
 app.listen(port, () => {

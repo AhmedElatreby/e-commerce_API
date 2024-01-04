@@ -55,3 +55,31 @@
 
 // Delete a product by ID
 // delete http://localhost:3000/products/:productId
+
+// Cart
+
+// Create a new cart for the authenticated user
+// POST http://localhost:3000/cart/create
+
+// Add a product to the user's cart
+// POST  http://localhost:3000/:cartId/2/addProduct
+//  Test data {
+//     "product_id": "3",
+//     "quantity": 1
+// }
+
+// Get details of the user's cart
+// GET http://localhost:3000/cart/:cartId
+
+// Update the quantity of a product in the user's cart
+// PUT http://localhost:3000/cart/:cartId/updateProduct
+// Test data {
+//     "product_id": 5,
+//     "quantity": 10
+// }
+
+// Remove a product from the user's cart
+//DELETE http://localhost:3000/cart/:cartId/removeProduct
+// Test data {
+//     "product_id": 5
+// }
