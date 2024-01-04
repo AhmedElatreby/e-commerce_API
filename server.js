@@ -12,6 +12,10 @@ const pool = require("./db/db");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const productRoutes = require("./routes/productRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const morgan = require("morgan");
+const helmet = require("helmet");
 
 const app = express();
 const port = 3000;
@@ -48,6 +52,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(cors());
+app.use(morgan("dev"));
+app.use(helmet());
 
 app.use((req, res, next) => {
   console.log("Request:", req.method, req.url);
@@ -55,10 +61,21 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
+});
+
 // User routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/products", productRoutes);
+app.use("/categories", categoryRoutes);
+
+app.use((req, res) => {
+  res.status(404).send("Not Found");
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

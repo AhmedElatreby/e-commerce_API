@@ -18,6 +18,18 @@ CREATE TABLE Products (
 );
 
 
+CREATE TABLE Categories (
+    category_id SERIAL PRIMARY KEY,
+    category_name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Product_Categories (
+    product_id INTEGER REFERENCES Products(product_id),
+    category_id INTEGER REFERENCES Categories(category_id),
+    PRIMARY KEY (product_id, category_id)
+);
+
+
 CREATE TABLE Carts (
     cart_id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES Users(user_id),
