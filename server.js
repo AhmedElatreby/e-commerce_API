@@ -18,7 +18,10 @@ const port = 3000;
 
 app.set("view engine", "ejs");
 
-const initializePassport = require("./config/passportConfig");
+const {
+  initializePassport,
+  ensureAuthenticated,
+} = require("./config/passportConfig");
 
 initializePassport(passport);
 
@@ -36,16 +39,13 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 days
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
       secure: false, // Change to true if using HTTPS
       httpOnly: true,
     },
   })
 );
 
-// console.log("POOL:  ", pool);
-
-// Use Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -60,25 +60,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something went wrong!");
-});
-
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
-// User routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/cart", cartRoutes);
+app.use("/orders", orderRoutes);
 
 app.use((req, res) => {
   res.status(404).send("Not Found");
@@ -86,10 +82,10 @@ app.use((req, res) => {
 
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
-  process.exit(1); // Exit the process or perform recovery logic
+  process.exit(1);
 });
 
-const pgp = require("pg-promise")({
+require("pg-promise")({
   query: (e) => {
     console.log("QUERY:", e.query);
   },

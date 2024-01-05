@@ -89,30 +89,30 @@ exports.removeProductFromCart = async (req, res) => {
 };
 
 // Checkout logic
-exports.checkout = async (req, res) => {
-  try {
-    const cartId = req.params.cartId;
+// exports.checkout = async (req, res) => {
+//   try {
+//     const cartId = req.params.cartId;
 
-    // Validate the cart
-    const cartDetails = await CartModel.getCartDetails(cartId);
-    if (!cartDetails) {
-      return res.status(404).json({ error: "Cart not found" });
-    }
+//     // Validate the cart
+//     const cartDetails = await CartModel.getCartDetails(cartId);
+//     if (!cartDetails) {
+//       return res.status(404).json({ error: "Cart not found" });
+//     }
 
-    //  assume payment details are accurate
+//     //  assume payment details are accurate
 
-    // Create an order to reflect the successful payment
-    const order = await OrderModel.createOrder(cartDetails);
+//     // Create an order to reflect the successful payment
+//     const order = await OrderModel.createOrder(cartDetails);
 
-    // Clear the cart or mark it as checked out
-    await CartModel.clearCart(cartId);
+//     // Clear the cart or mark it as checked out
+//     await CartModel.clearCart(cartId);
 
-    res.status(200).json({ message: "Checkout successful", order });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+//     res.status(200).json({ message: "Checkout successful", order });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
 
 // POST /cart/{cartId}/checkout
 exports.checkout = async (req, res) => {
@@ -146,11 +146,9 @@ exports.checkout = async (req, res) => {
     console.error("Error during checkout:", error);
 
     // Respond with a meaningful error message
-    return res
-      .status(500)
-      .json({
-        error: "Internal Server Error during checkout",
-        details: error.message,
-      });
+    return res.status(500).json({
+      error: "Internal Server Error during checkout",
+      details: error.message,
+    });
   }
 };
