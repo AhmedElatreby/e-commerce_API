@@ -20,4 +20,7 @@ router.put(
 // Remove a product from the user's cart
 router.delete("/:cartId/removeProduct", CartController.removeProductFromCart);
 
+// Checkout route
+router.post("/:cartId/checkout", CartController.checkout);
+
 module.exports = router;

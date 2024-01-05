@@ -1,5 +1,3 @@
-// cartModel.js
-
 const pool = require("../db/db");
 
 const createCart = async (userId) => {
@@ -45,10 +43,32 @@ const removeProductFromCart = async (cartId, productId) => {
   return result.rows[0];
 };
 
+const clearCart = async (cartId) => {
+  try {
+    const deleteQuery = "DELETE FROM Cart_Items WHERE cart_id = $1";
+    await pool.query(deleteQuery, [cartId]);
+
+    // Alternatively, if you want to mark the cart as checked out, update the Carts table
+    // const updateQuery = "UPDATE Carts SET checked_out = true WHERE cart_id = $1";
+    // await pool.query(updateQuery, [cartId]);
+
+    // Return any relevant information after clearing the cart
+    const result = {
+      message: "Cart cleared successfully",
+    };
+
+    return result;
+  } catch (error) {
+    console.error("Error clearing cart:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   createCart,
   addProductToCart,
   getCartDetails,
   updateProductQuantityInCart,
   removeProductFromCart,
+  clearCart,
 };

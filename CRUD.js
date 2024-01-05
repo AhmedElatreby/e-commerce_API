@@ -62,7 +62,7 @@
 // POST http://localhost:3000/cart/create
 
 // Add a product to the user's cart
-// POST  http://localhost:3000/:cartId/2/addProduct
+// POST  http://localhost:3000/:cartId/addProduct
 //  Test data {
 //     "product_id": "3",
 //     "quantity": 1
@@ -83,3 +83,63 @@
 // Test data {
 //     "product_id": 5
 // }
+
+
+// Checkout route
+//POST http://localhost:3000/cart/:cartId/checkout
+// Test data {
+//     "product_id": 5
+// }
+
+/*
+To Test checkout process
+1- create Cart 
+    - Make sure user is login before creating cart
+    - use POST http://localhost:3000/cart/create to create a cart
+
+2- Add Products to the Cart
+    - use POST  http://localhost:3000/:cartId/addProduct
+
+    -  Test data {
+         "product_id": "3",
+         "quantity": 1
+        }
+
+3- View Cart Details:
+    -  Get details of the user's cart
+       GET http://localhost:3000/cart/:cartId
+       it will show 
+       [
+    {
+        "quantity": 3,
+        "product_id": 6,
+        "name": "pc",
+        "price": "999.99",
+        "description": "High-performance pc"
+    },
+    {
+        "quantity": 9,
+        "product_id": 1,
+        "name": "tea",
+        "price": "10.99",
+        "description": "this is a test"
+    }
+]
+
+
+4- Update Product Quantity in Cart
+    - use PUT http://localhost:3000/cart/:cartId/
+    - Test data {
+                "product_id": 6,
+                "quantity": 4
+                }
+
+5- Remove Product from Cart
+    - Use DELETE http://localhost:3000/cart/:cartId/removeProduct
+    - Test Data {
+        "product_id": 1
+        }
+
+6- Checkout
+    - 
+*/

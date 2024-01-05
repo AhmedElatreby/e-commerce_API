@@ -24,16 +24,13 @@ const authenticateUser = async (email, password, done) => {
     if (isPasswordValid) {
       return done(null, user);
     } else {
-      // If the password is incorrect, return an error message
       return done(null, false, { message: "Password incorrect." });
     }
   } catch (error) {
-    // If an error occurs during authentication, return the error
     return done(error);
   }
 };
 
-// Use the LocalStrategy with the authenticateUser function
 passport.use(new LocalStrategy({ usernameField: "email" }, authenticateUser));
 
 // Serialize the user to store in the session
