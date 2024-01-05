@@ -4,13 +4,13 @@ const { v4: uuidv4 } = require("uuid");
 const createOrderInDB = async (order) => {
   try {
     // Insert the order into the orders table
-    const result = await db.one(
-      "INSERT INTO Orders (order_id, user_id, status, total_price) VALUES ($1, $2, $3, $4) RETURNING *",
+    const result = await db.none(
+      "INSERT INTO Orders (order_id, user_id, status, total_price) VALUES ($1::uuid, $2, $3, $4)",
       [order.order_id, order.user_id, order.status, order.total_price]
     );
 
-    // Return the created order
-    return result;
+    // No rows are expected to be returned since we used db.none
+    return order;
   } catch (error) {
     // Handle errors, log them, or throw an exception
     console.error("Error creating order in the database:", error);
@@ -34,12 +34,12 @@ const createOrder = async (cartDetails) => {
   };
 
   // Save the order to the database
-  const createdOrder = await createOrderInDB(order);
+  await createOrderInDB(order);
 
   // You can perform additional actions here if needed
 
   // Return the created order
-  return createdOrder;
+  return order;
 };
 
 // Calculate the total price based on the products in the cart

@@ -141,5 +141,14 @@ To Test checkout process
         }
 
 6- Checkout
-    - 
+    - POST http://localhost:3000/cart/:cartId/checkout
+    - the output will be like this:
+    {
+    "message": "Checkout successful",
+    "order": {
+        "order_id": "252e5f19-c471-4e41-9b6a-9bbf962ef740",
+        "status": "pending",
+        "total_price": 0
+    }
+}
 */

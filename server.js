@@ -89,6 +89,12 @@ process.on("uncaughtException", (err) => {
   process.exit(1); // Exit the process or perform recovery logic
 });
 
+const pgp = require("pg-promise")({
+  query: (e) => {
+    console.log("QUERY:", e.query);
+  },
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

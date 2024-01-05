@@ -1,21 +1,20 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
-const { query } = require("../db/db");
+const db = require("../db/db");
 
 // Function to authenticate a user
 const authenticateUser = async (email, password, done) => {
   try {
     // Query the database to find a user with the provided email
-    const result = await query("SELECT * FROM Users WHERE email = $1", [email]);
+    const user = await db.oneOrNone("SELECT * FROM Users WHERE email = $1", [
+      email,
+    ]);
 
     // If no user found, return an error message
-    if (result.rows.length === 0) {
+    if (!user) {
       return done(null, false, { message: "No user with that email." });
     }
-
-    // Extract the user from the query result
-    const user = result.rows[0];
 
     // Compare the provided password with the hashed password stored in the database
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -36,17 +35,16 @@ passport.use(new LocalStrategy({ usernameField: "email" }, authenticateUser));
 // Serialize the user to store in the session
 passport.serializeUser((user, done) => {
   console.log("Serializing user:", user);
-  done(null, user.user_id);
+  done(null, user ? user.user_id : null);
 });
 
 // Deserialize the user from the session
 passport.deserializeUser(async (id, done) => {
   try {
     // Query the database to find a user with the provided user_id
-    const result = await query("SELECT * FROM Users WHERE user_id = $1", [id]);
-
-    // Extract the user from the query result
-    const user = result.rows[0];
+    const user = await db.oneOrNone("SELECT * FROM Users WHERE user_id = $1", [
+      id,
+    ]);
 
     // Log the user during deserialization
     console.log("Deserialized user:", user);
@@ -64,15 +62,15 @@ function initializePassport(passport) {
   passport.use(new LocalStrategy({ usernameField: "email" }, authenticateUser));
 
   passport.serializeUser((user, done) => {
-    done(null, user.user_id);
+    done(null, user ? user.user_id : null);
   });
 
   passport.deserializeUser(async (id, done) => {
     try {
-      const result = await query("SELECT * FROM Users WHERE user_id = $1", [
-        id,
-      ]);
-      const user = result.rows[0];
+      const user = await db.oneOrNone(
+        "SELECT * FROM Users WHERE user_id = $1",
+        [id]
+      );
       done(null, user);
     } catch (error) {
       done(error);
