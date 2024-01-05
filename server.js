@@ -71,6 +71,7 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 // User routes
 app.use("/auth", authRoutes);
@@ -79,6 +80,7 @@ app.use("/dashboard", dashboardRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/cart", cartRoutes);
+app.use("/orders", orderRoutes);
 
 app.use((req, res) => {
   res.status(404).send("Not Found");
@@ -89,7 +91,7 @@ process.on("uncaughtException", (err) => {
   process.exit(1); // Exit the process or perform recovery logic
 });
 
-const pgp = require("pg-promise")({
+require("pg-promise")({
   query: (e) => {
     console.log("QUERY:", e.query);
   },
