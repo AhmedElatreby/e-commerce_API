@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const CartController = require("../controller/cartController");
-const ensureAuthenticated =
-  require("../config/passportConfig").ensureAuthenticated;
+const { ensureAuthenticated } = require("../config/passportConfig");
 
-// Create a new cart for the authenticated user
-router.post("/create", ensureAuthenticated, CartController.createCart);
+// Ensure the user is authenticated before creating a new cart
+router.post("/create", ensureAuthenticated, (req, res) => {
+  console.log("Is authenticated:", req.isAuthenticated());
+  console.log("User in session when creating cart:", req.user.email);
+  console.log("User in session:", req.user);
+
+  // Pass the request and response objects to the controller function
+  CartController.createCart(req, res);
+});
 
 // Add a product to the user's cart
 router.post(

@@ -10,14 +10,6 @@ const cookieParser = require("cookie-parser");
 const PgSession = require("connect-pg-simple")(session);
 const pool = require("./db/db");
 
-const morgan = require("morgan");
-const helmet = require("helmet");
-
-const app = express();
-const port = 3000;
-
-app.set("view engine", "ejs");
-
 const {
   initializePassport,
   ensureAuthenticated,
@@ -25,9 +17,14 @@ const {
 
 initializePassport(passport);
 
+const app = express();
+const port = 3000;
+
+app.set("view engine", "ejs");
+
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
@@ -37,35 +34,46 @@ app.use(
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
-      secure: false, // Change to true if using HTTPS
-      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000,
     },
   })
 );
 
+// Middleware for authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(flash());
-app.use(cors());
-app.use(morgan("dev"));
-app.use(helmet());
-
+// Middleware for logging and session handling
 app.use((req, res, next) => {
   console.log("Request:", req.method, req.url);
-  console.log("Session:", req.session);
+  console.log("Session before route:", req.session);
   next();
 });
 
+// Middleware for authentication
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Flash messages, CORS, logging, security headers
+app.use(flash());
+app.use(cors());
+
+// Ensure the cart routes come after authentication middleware
+app.use((req, res, next) => {
+  console.log("Session before route:", req.session);
+  next();
+});
+
+// Routes
+const cartRoutes = require("./routes/cartRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
-const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 
 app.use("/auth", authRoutes);
@@ -73,22 +81,19 @@ app.use("/users", userRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
-app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
+app.use("/cart", ensureAuthenticated, cartRoutes);
 
+app.use((req, res, next) => {
+  console.log("Request Headers:", req.headers);
+  console.log("Session ID:", req.sessionID);
+  console.log("User in session:", req.user);
+  next();
+});
+
+// Default route
 app.use((req, res) => {
   res.status(404).send("Not Found");
-});
-
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
-  process.exit(1);
-});
-
-require("pg-promise")({
-  query: (e) => {
-    console.log("QUERY:", e.query);
-  },
 });
 
 app.listen(port, () => {

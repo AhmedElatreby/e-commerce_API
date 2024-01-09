@@ -2,18 +2,19 @@ const CartModel = require("../models/cartModel");
 const OrderModel = require("../models/orderModel");
 
 // Create a new cart
+// Create a new cart
 exports.createCart = async (req, res) => {
   try {
-    console.log("User in session:", req.user); // Check if the user is available in the session
-    console.log("Is authenticated:", req.isAuthenticated()); // Check if the user is authenticated
-
     // Check if the user is authenticated using req.isAuthenticated()
     if (!req.isAuthenticated()) {
       return res.status(401).json({ error: "User not authenticated" });
     }
 
-    const userId = req.user.id;
-    await CartModel.createCart(userId);
+    // User is authenticated, proceed to create the cart
+    const email = req.user ? req.user.email : null;
+    console.log("User in session when creating cart:", email);
+
+    await CartModel.createCart(email);
     res.status(200).json({ message: "Cart created successfully" });
   } catch (error) {
     console.error("Error creating cart:", error);
