@@ -1,17 +1,29 @@
 const express = require("express");
+const passport = require("passport");
 const router = express.Router();
 const CartController = require("../controller/cartController");
 const { ensureAuthenticated } = require("../config/passportConfig");
 
 // Ensure the user is authenticated before creating a new cart
-router.post("/create", ensureAuthenticated, (req, res) => {
-  console.log("Is authenticated:", req.isAuthenticated());
-  console.log("User in session when creating cart:", req.user.email);
-  console.log("User in session:", req.user);
+router.post(
+  "/create",
+  passport.authenticate("local", { session: false }),
+  ensureAuthenticated,
+  async (req, res) => {
+    try {
+      // The authenticated user information is available in req.user
+      const email = req.user.email;
 
-  // Pass the request and response objects to the controller function
-  CartController.createCart(req, res);
-});
+      // Pass the email to createCart function in CartController
+      const cart = await CartController.createCart(email);
+
+      res.status(201).json(cart);
+    } catch (error) {
+      console.error("Error creating cart:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
 
 // Add a product to the user's cart
 router.post(
