@@ -62,5 +62,12 @@ CREATE TABLE Order_Items (
     price DECIMAL(10, 2)
 );
 
+-- Alter the foreign key constraint to ON DELETE CASCADE
+ALTER TABLE product_categories
+DROP CONSTRAINT product_categories_product_id_fkey,
+ADD CONSTRAINT product_categories_product_id_fkey
+FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE;
+
+
 # Exit psql
 \q

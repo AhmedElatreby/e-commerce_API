@@ -32,7 +32,7 @@ Abstract: A REST API for online e-commerce system
 
 ## Routes available
 
-base url: `localhost:3000/api`
+base url: `http://localhost:3000`
 
 - User
 
@@ -43,13 +43,44 @@ base url: `localhost:3000/api`
 | /users/:userId| GET |  |Get user by ID |
 | /users/:userId| PUT | "username": "test1",    "password": "123456",    "first_name": "v",    "last_name": "a",    "email": "<test@test.com>" |Update user by details |
 | /users/:userId| DELETE |  |Remove user from db |
-
+___
 - AUTH
 
 | Routes | Method | Test Data | Description |
 | ---     | :---:   | ---   |---   |
 | /auth/login | POST |  "email": "<test@1.com>", "password": "123456" |For loging users in, comparing their email and password with exists db. If correct authenticating the user with Express Session. |
-| /auth/login | GET|  | For logging the user out |
+| /auth/logout | GET|  | For logging the user out |
+___
+- categories
+
+| Routes | Method | Test Data | Description |
+| ---     | :---:   | ---   |---   |
+| /categories/ | GET |  | Get all categories from db |
+| /categories/:categoryId | GET|  | Get category by ID from db |
+| /categories | POST | "category_name": "test" | Add a category into db |
+| /categories/:categoryId | PUT | "category_name": "test1" | Update category into db |
+| /categories/:categoryId | DELETE |  | Delete a category from db |
+___
+- products
+
+| Routes | Method | Test Data | Description |
+| ---     | :---:   | ---   |---   |
+| /products | GET |  | Get all products from db |
+| /products/:productId | GET|  | Get product by ID from db |
+| /products | POST |  "category_id": 3, "name": "test", "price": "999.99",    "description": "test" | Add a product into db |
+| /products/:productId | PUT | "name": "test1", "price": "999.99", "description": "test" | Update product into db |
+| /products/:productId | DELETE |  | Delete a product from db |
+
+___
+- Cart
+
+| Routes | Method | Test Data | Description |
+| ---     | :---:   | ---   |---   |
+| /products | GET |  | Get all products from db |
+| /products/:productId | GET|  | Get product by ID from db |
+| /products | POST |  "category_id": 3, "name": "test", "price": "999.99",    "description": "test" | Add a product into db |
+| /products/:productId | PUT | "name": "test1", "price": "999.99", "description": "test" | Update product into db |
+| /products/:productId | DELETE |  | Delete a product from db |
 
 ## Directory Hierarchy
 

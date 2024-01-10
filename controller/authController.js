@@ -7,7 +7,7 @@ exports.getLogin = (req, res) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
+  passport.authenticate("local", (err, { user, token }, info) => {
     if (err) {
       console.error(err);
       return next(err);
@@ -21,21 +21,19 @@ exports.postLogin = (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) {
         console.error(err);
-        return next(err);
+        return res.status(500).json({ error: "Internal Server Error" });
       }
 
       console.log("Authentication successful:", req.user);
-      return res.redirect("/dashboard");
+
+      // Send the token in the response
+      res.status(200).json({ token });
     });
-  })(req, res, next);
+  })(req, res, next); // Move this line after the declaration of token
 };
 
 exports.logout = (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    req.session.destroy();
-    res.redirect("/auth/login");
-  });
+  req.logout(); // Passport exposes a logout() function on req that can be called to end the login session
+  req.session.destroy(); // Destroy the session
+  res.redirect("/auth/login");
 };

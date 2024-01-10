@@ -1,44 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
-    />
-    <title>Login</title>
-  </head>
-  <body>
-    <h2>Login Page</h2>
-    <form action="/auth/login" method="POST">
-      <div>
-        <label for="email">Email:</label>
-        <input
-          type="text"
-          id="email"
-          name="email"
-          placeholder="Email"
-          required
-        />
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
+  <title>Login</title>
+</head>
+<body>
+  <h2>Login Page</h2>
+  <form id="loginForm">
+    <div>
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" placeholder="Email" required />
+    </div>
 
-      <div>
-        <label for="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Password"
-          required
-        />
-      </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="Password" required />
+    </div>
 
-      <div>
-        <button type="submit">Login</button>
-      </div>
+    <div>
+      <button type="submit">Login</button>
+    </div>
 
-      <a href="/auth/register">Register</a>
-    </form>
-  </body>
+    <a href="/auth/register">Register</a>
+  </form>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      fetch('/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the token here
+        const token = data.token;
+        console.log('Token:', token);
+
+        // You can store the token in localStorage or sessionStorage
+        localStorage.setItem('token', token);
+
+        // Redirect or perform other actions as needed
+        window.location.href = '/dashboard'; // Redirect to the dashboard page
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
 </html>
