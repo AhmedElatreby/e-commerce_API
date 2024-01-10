@@ -27,4 +27,13 @@ router.put("/:orderId", ensureAuthenticated, OrderController.updateOrder);
 // DELETE delete an existing order by ID
 router.delete("/:orderId", ensureAuthenticated, OrderController.deleteOrder);
 
+// POST create a new order
+router.post("/", OrderController.createOrder);
+
+// PUT update an existing order by ID
+router.put("/:orderId", OrderController.updateOrder);
+
+// DELETE delete an existing order by ID
+router.delete("/:orderId", OrderController.deleteOrder);
+
 module.exports = router;

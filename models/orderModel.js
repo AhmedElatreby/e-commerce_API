@@ -102,12 +102,11 @@ const calculateTotalPrice = (products) => {
 // Function to get all orders for a user
 const getAllOrders = async (userId) => {
   try {
-    // Assuming there's a database query to retrieve orders for a specific user
-    const orders = await db.any("SELECT * FROM orders WHERE user_id = $1", [
-      userId,
-    ]);
-    return orders;
+    const query = "SELECT * FROM Orders WHERE user_id = $1";
+    const result = await db.any(query, [userId]);
+    return result;
   } catch (error) {
+    console.error("Error retrieving orders from the database:", error);
     throw error;
   }
 };
