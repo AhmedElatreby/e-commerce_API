@@ -1,6 +1,6 @@
 // USER
 // add user
-// POST http://localhost:3000/users
+// POST http://localhost:3000/users/register
 
 // get all users
 // GET http://localhost:3000/users
@@ -12,7 +12,7 @@
 // PUT http://localhost:3000/users/:userId
 
 // Delete
-// DELETE  http://localhost:3000/users/:id
+// DELETE  http://localhost:3000/users/:userId
 
 // AUTH
 
@@ -20,7 +20,7 @@
 // POST  http://localhost:3000/auth/login
 
 // Logout
-// POST  http://localhost:3000/auth/logout
+// GET  http://localhost:3000/auth/logout
 
 // categories
 
