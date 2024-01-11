@@ -76,11 +76,14 @@ ___
 
 | Routes | Method | Test Data | Description |
 | ---     | :---:   | ---   |---   |
-| /products | GET |  | Get all products from db |
-| /products/:productId | GET|  | Get product by ID from db |
-| /products | POST |  "category_id": 3, "name": "test", "price": "999.99",    "description": "test" | Add a product into db |
-| /products/:productId | PUT | "name": "test1", "price": "999.99", "description": "test" | Update product into db |
-| /products/:productId | DELETE |  | Delete a product from db |
+| /cart/create | POST |  | Create a shopping cart with user jwt |
+| /cart/:cartId/addProduct | POST|  "product_id": "3",    "quantity": 1 | Add product to Cart |
+| /cart/:cartId | GET |   | Get a product from db |
+| /cart/:cartId/updateProduct | PUT |  "product_id": "3", "quantity": 6 | Update product in cart |
+| /cart/:cartId/removeProduct | DELETE |  | Delete a product from cart |
+| cart/:cartId/checkout | POST |  | Calculate the total, checkout and clear the cart |
+
+
 
 ## Directory Hierarchy
 
