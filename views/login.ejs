@@ -24,74 +24,11 @@
     </div>
 
     <button id="logoutButton">Logout</button>
-    <!-- Display username or any user info here -->
-    <p id="userInfo"></p>
+
+    <a href="/users/register">Don't have an account?</a>
+ 
   </form>
 
-  <script>
-    // Check if a token is present in localStorage
-    const token = localStorage.getItem('token');
-
-    // Check if the user is already authenticated
-    if (token) {
-      // Display user information or perform actions as needed
-      document.getElementById('userInfo').textContent = 'User is logged in';
-    }
-
-    // Event listener for the login form
-    document.getElementById('loginForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      fetch('/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        const token = data.token;
-        console.log('Token:', token);
-
-        // Store the token in localStorage
-        localStorage.setItem('token', token);
-
-        // Display user information or perform actions as needed
-        document.getElementById('userInfo').textContent = 'User is logged in';
-
-        // Redirect or perform other actions as needed
-        window.location.href = '/dashboard'; // Redirect to the dashboard page
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    });
-
-    // Event listener for the logout button
-    document.getElementById('logoutButton').addEventListener('click', function (event) {
-  event.preventDefault();
-  fetch('/auth/logout', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,  // Include the token in the headers
-    },
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Logout successful');
-    localStorage.removeItem('token');
-    window.location.href = '/auth/login';
-  })
-  .catch(error => {
-    console.error('Logout error:', error);
-  });
-});
-
-  </script>
+ 
 </body>
 </html>

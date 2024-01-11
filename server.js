@@ -15,9 +15,10 @@ const passportConfig = require("./config/passportConfig");
 passportConfig.initializePassport(passport);
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
+
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -33,7 +34,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     },
   })
@@ -65,7 +66,7 @@ const cartRoutes = require("./routes/cartRoutes");
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-app.use("/dashboard", ensureAuthenticated, dashboardRoutes);
+app.use("/dashboard",  dashboardRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/orders", orderRoutes);
@@ -73,11 +74,22 @@ app.use("/orders", orderRoutes);
 // Ensure the cart routes come after authentication middleware
 app.use("/cart", ensureAuthenticated, cartRoutes);
 
+// app.get('/register', (req, res) => {
+//   res.render('register')
+// })
+
+
 // Additional routes
 app.use((req, res) => {
   res.status(404).send("Not Found");
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// General error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Internal Server Error');
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
