@@ -50,8 +50,10 @@ const authenticateUser = async (email, password, done) => {
     if (isPasswordValid) {
       console.log("Authentication successful!");
   
+  
       // Generate a JWT token
-      const token = jwt.sign({ user_id: user.user_id }, process.env.SESSION_SECRET);
+    const token = jwt.sign({ user_id: user.user_id, user }, process.env.SESSION_SECRET);
+
   
       // Return the token along with the user
       return done(null, { user, token });
@@ -112,6 +114,7 @@ const ensureAuthenticated = (req, res, next) => {
 
   // If req.user is already set, move to the next middleware
   if (req.user) {
+    console.log('User already authenticated:', req.user);
     return next();
   }
 
@@ -127,7 +130,7 @@ const ensureAuthenticated = (req, res, next) => {
   console.log('Token before verification:', token);
 
   // Verify the token
-  jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.SESSION_SECRET, async (err, decoded) => {
     if (err) {
       console.error('Token verification failed:', err);
       return res.status(401).json({ message: 'Unauthorized' });
@@ -135,16 +138,36 @@ const ensureAuthenticated = (req, res, next) => {
 
     console.log('Decoded Token:', decoded);
 
-  // Check if the token is blacklisted
-  if (isTokenBlacklisted(token)) {
-    return res.status(401).json({ message: 'Token revoked' });
-  }
-    // Attach the decoded user information to the request object
-    req.user = decoded;
+    // Check if the token is blacklisted
+    if (isTokenBlacklisted(token)) {
+      console.log('Token is blacklisted.');
+      return res.status(401).json({ message: 'Token revoked' });
+    }
 
-    // Continue with the next middleware or route handler
-    next();
+    try {
+      // Retrieve the user from the database using the user_id from the token
+      const user = await UserModel.getUserById(decoded.user_id);
+
+      if (!user) {
+        console.log('User not found.');
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      // Attach the user object to the request
+      req.user = user;
+
+      console.log('User authenticated successfully:', req.user);
+
+      // Continue with the next middleware or route handler
+      next();
+    } catch (error) {
+      console.error('Error retrieving user:', error);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
   });
 };
+
+module.exports = { initializePassport, ensureAuthenticated, isTokenBlacklisted, blacklistedTokens };
+
 
 module.exports = { initializePassport, ensureAuthenticated, isTokenBlacklisted, blacklistedTokens };
