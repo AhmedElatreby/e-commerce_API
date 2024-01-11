@@ -23,39 +23,12 @@
       <button type="submit">Login</button>
     </div>
 
-    <a href="/auth/register">Register</a>
+    <button id="logoutButton">Logout</button>
+
+    <a href="/users/register">Don't have an account?</a>
+ 
   </form>
 
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      fetch('/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        // Handle the token here
-        const token = data.token;
-        console.log('Token:', token);
-
-        // You can store the token in localStorage or sessionStorage
-        localStorage.setItem('token', token);
-
-        // Redirect or perform other actions as needed
-        window.location.href = '/dashboard'; // Redirect to the dashboard page
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    });
-  </script>
+ 
 </body>
 </html>

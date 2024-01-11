@@ -14,10 +14,7 @@ const getAllUsers = async () => {
 
 const getUserById = async (userId) => {
   try {
-    const result = await db.oneOrNone(
-      "SELECT * FROM Users WHERE user_id = $1",
-      [userId]
-    );
+    const result = await db.oneOrNone("SELECT * FROM Users WHERE user_id = $1", [userId]);
     return result;
   } catch (error) {
     console.error("Query Error:", error);

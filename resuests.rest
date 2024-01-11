@@ -1,0 +1,13 @@
+# POST http://localhost:3000/users/register
+# Content-Type: application/json
+
+# {
+#     "username": "hra",
+#     "password": "123456",
+#     "first_name": "v",
+#     "last_name": "a",
+#     "email": "33@1.com"
+# }
+
+GET http://localhost:3000/users
+Content-Type: application/json

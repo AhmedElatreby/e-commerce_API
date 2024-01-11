@@ -3,8 +3,34 @@ require("dotenv").config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
-const db = require("../db/db");
+
 const jwt = require("jsonwebtoken");
+
+const db = require("../db/db");
+const UserModel = require("../models/userModel");
+
+const JwtStrategy = require('passport-jwt').Strategy,
+      ExtractJwt = require('passport-jwt').ExtractJwt;
+
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = process.env.SESSION_SECRET;
+
+passport.use(new JwtStrategy(opts, async function (jwt_payload, done) {
+  try {
+    const user = await UserModel.getUserById(jwt_payload.user_id);
+
+    if (user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+  } catch (error) {
+    console.error("Error in JWT strategy:", error);
+    return done(error, false);
+  }
+}));
+
 
 // Function to authenticate a user
 const authenticateUser = async (email, password, done) => {
@@ -71,7 +97,15 @@ const initializePassport = (passport) => {
   });
 };
 
+
+const blacklistedTokens = new Set();
+
+const isTokenBlacklisted = (token) => {
+  return blacklistedTokens.has(token);
+};
+
 const ensureAuthenticated = (req, res, next) => {
+  console.log('Token in headers:', req.headers.authorization);
   console.log('Request Headers:', req.headers);
   console.log('Session Data:', req.session);
   console.log('User in session:', req.user);
@@ -101,6 +135,10 @@ const ensureAuthenticated = (req, res, next) => {
 
     console.log('Decoded Token:', decoded);
 
+  // Check if the token is blacklisted
+  if (isTokenBlacklisted(token)) {
+    return res.status(401).json({ message: 'Token revoked' });
+  }
     // Attach the decoded user information to the request object
     req.user = decoded;
 
@@ -109,4 +147,4 @@ const ensureAuthenticated = (req, res, next) => {
   });
 };
 
-module.exports = { initializePassport, ensureAuthenticated };
+module.exports = { initializePassport, ensureAuthenticated, isTokenBlacklisted, blacklistedTokens };
