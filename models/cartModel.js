@@ -1,20 +1,10 @@
 const db = require("../db/db");
 
-const createCart = async (email) => {
+
+const createCart = async (user_id) => {
   try {
-    // Retrieve user_id based on email
-    const user = await db.oneOrNone("SELECT * FROM Users WHERE email = $1", [
-      email,
-    ]);
-
-    if (!user) {
-      // Handle the case where the user with the given email doesn't exist
-      throw new Error("User not found");
-    }
-
-    // Insert into Carts table using the retrieved user_id
     const query = "INSERT INTO Carts (user_id) VALUES ($1) RETURNING *";
-    const result = await db.one(query, [user.user_id]);
+    const result = await db.one(query, [user_id]);
     return result;
   } catch (error) {
     console.error("Error creating cart:", error);
