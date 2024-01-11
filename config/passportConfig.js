@@ -6,6 +6,19 @@ const bcrypt = require("bcrypt");
 const db = require("../db/db");
 const jwt = require("jsonwebtoken");
 
+const JwtStrategy = require('passport-jwt').Strategy,
+      ExtractJwt = require('passport-jwt').ExtractJwt;
+
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = process.env.SESSION_SECRET;
+
+passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+  // Check against your database for the user corresponding to the jwt_payload
+  // If the user is found, return done(null, user);
+  // If the user is not found, return done(null, false);
+}));
+
 // Function to authenticate a user
 const authenticateUser = async (email, password, done) => {
   console.log("Authenticating user:", email);
@@ -72,6 +85,7 @@ const initializePassport = (passport) => {
 };
 
 const ensureAuthenticated = (req, res, next) => {
+  console.log('Token in headers:', req.headers.authorization);
   console.log('Request Headers:', req.headers);
   console.log('Session Data:', req.session);
   console.log('User in session:', req.user);

@@ -65,7 +65,7 @@ const cartRoutes = require("./routes/cartRoutes");
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-app.use("/dashboard", dashboardRoutes);
+app.use("/dashboard", ensureAuthenticated, dashboardRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/orders", orderRoutes);

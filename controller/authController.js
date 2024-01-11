@@ -29,11 +29,20 @@ exports.postLogin = (req, res, next) => {
       // Send the token in the response
       res.status(200).json({ token });
     });
-  })(req, res, next); // Move this line after the declaration of token
+  })(req, res, next);
 };
 
+
+
+
 exports.logout = (req, res) => {
-  req.logout(); // Passport exposes a logout() function on req that can be called to end the login session
-  req.session.destroy(); // Destroy the session
-  res.redirect("/auth/login");
+  // Check if there is a valid user in the request
+  console.log('User before logout:', req.user);
+  req.logout();
+  console.log('User after logout:', req.user);
+  req.session.destroy();
+  console.log('User after session destroy:', req.user);
+  return res.status(200).json({ message: 'Logout successful' });
 };
+
+

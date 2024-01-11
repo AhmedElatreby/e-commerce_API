@@ -23,10 +23,22 @@
       <button type="submit">Login</button>
     </div>
 
-    <a href="/auth/register">Register</a>
+    <button id="logoutButton">Logout</button>
+    <!-- Display username or any user info here -->
+    <p id="userInfo"></p>
   </form>
 
   <script>
+    // Check if a token is present in localStorage
+    const token = localStorage.getItem('token');
+
+    // Check if the user is already authenticated
+    if (token) {
+      // Display user information or perform actions as needed
+      document.getElementById('userInfo').textContent = 'User is logged in';
+    }
+
+    // Event listener for the login form
     document.getElementById('loginForm').addEventListener('submit', function (event) {
       event.preventDefault();
 
@@ -42,12 +54,14 @@
       })
       .then(response => response.json())
       .then(data => {
-        // Handle the token here
         const token = data.token;
         console.log('Token:', token);
 
-        // You can store the token in localStorage or sessionStorage
+        // Store the token in localStorage
         localStorage.setItem('token', token);
+
+        // Display user information or perform actions as needed
+        document.getElementById('userInfo').textContent = 'User is logged in';
 
         // Redirect or perform other actions as needed
         window.location.href = '/dashboard'; // Redirect to the dashboard page
@@ -56,6 +70,28 @@
         console.error('Error:', error);
       });
     });
+
+    // Event listener for the logout button
+    document.getElementById('logoutButton').addEventListener('click', function (event) {
+  event.preventDefault();
+  fetch('/auth/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,  // Include the token in the headers
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Logout successful');
+    localStorage.removeItem('token');
+    window.location.href = '/auth/login';
+  })
+  .catch(error => {
+    console.error('Logout error:', error);
+  });
+});
+
   </script>
 </body>
 </html>
