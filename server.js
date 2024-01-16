@@ -12,10 +12,10 @@ const pool = require("./db/db");
 const { ensureAuthenticated } = require("./config/passportConfig");
 const passportConfig = require("./config/passportConfig");
 
+
 passportConfig.initializePassport(passport);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
 
@@ -70,26 +70,44 @@ app.use("/dashboard",  dashboardRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/orders", orderRoutes);
-
-// Ensure the cart routes come after authentication middleware
 app.use("/cart", ensureAuthenticated, cartRoutes);
 
-// app.get('/register', (req, res) => {
-//   res.render('register')
-// })
+// Swagger Docs
+const swaggerUi = require("swagger-ui-express");
+const swaggerJSDoc = require("swagger-jsdoc");
 
+const swaggerOptions = {
+  swaggerDefinition:{
+    openapi: "3.0.1",
+    info: {
+      title: "E-Commerce Shop - Project",
+      version: '1.0.0',
+    },
+  },
+  apis: ["./routes/*.js"],
+};
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Additional routes
 app.use((req, res) => {
   res.status(404).send("Not Found");
 });
 
-// General error handler
+// Error handling
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Internal Server Error');
+  const status = err.status || 500;
+  res.status(status).json({
+    error: {
+      status,
+      message: err.message || "Internal Server Error",
+    },
+  });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Port
+const PORT = process.env.PORT || 3000;
+
+// Server
+app.listen(PORT, () => console.log(`Server Listening on Port ${PORT}`));

@@ -1,4 +1,3 @@
-const passport = require("passport");
 const UserModel = require("../models/userModel");
 
 exports.createUser = async (req, res) => {

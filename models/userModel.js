@@ -48,17 +48,22 @@ const getUserByEmail = async (email) => {
 
 const createUser = async (username, password, email, first_name, last_name) => {
   try {
+    // Hash the password using bcrypt
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert the hashed password into the database
     const result = await db.one(
       "INSERT INTO Users (username, password, email, first_name, last_name) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [username, hashedPassword, email, first_name, last_name]
     );
+
     return result;
   } catch (error) {
     console.error("Query Error:", error);
     throw error;
   }
 };
+
 
 const deleteUser = async (userId) => {
   try {

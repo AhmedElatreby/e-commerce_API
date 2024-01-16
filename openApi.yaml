@@ -1,0 +1,42 @@
+# openapi: 3.0.1
+# info:
+#   title: E-Commerce Shop - Project
+#   description: RESTful API project of Codecademy' s Full-Stack-Engineering path
+#   contact:
+#     email: ahmede663@gmail.com
+#   version: '1.0'
+# servers:
+#   - url: http://localhost:3000
+#     variables: {}
+# tags:
+#   - name: users
+#     description: Operations about user
+# paths:
+#   /users/register:
+#     post:
+#       tags:
+#         - register
+#       summary: Add a new user to the database.
+#       operationId: registerUser
+#       parameters: []
+#       requestBody:
+#         description: Register a new user and store their information in the database.
+#         content:
+#           application/json:
+#             example:
+#               username: test1
+#               first_name: test
+#               last_name: moreTest
+#               email: 1test@test.com
+#               password: "123456"
+#         required: true
+#       responses:
+#         '200':
+#           description: Successful operation
+#           headers: {}
+#       deprecated: false
+#       security: []
+#       servers:
+#         # - url: https://expressjs-production-bb16.up.railway.app/docs
+#         - url: http://localhost:3000
+#           variables: {}

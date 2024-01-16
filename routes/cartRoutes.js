@@ -22,4 +22,8 @@ router.delete("/:cartId/removeProduct", ensureAuthenticated, CartController.remo
 // Checkout route
 router.post("/:cartId/checkout", ensureAuthenticated, CartController.checkout);
 
+
+
+
+
 module.exports = router;
