@@ -1,0 +1,8 @@
+[build]
+  command = "npm install && npm start"
+ 
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
