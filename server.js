@@ -70,7 +70,7 @@ app.use("/dashboard",  dashboardRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/orders", orderRoutes);
-app.use("/cart", ensureAuthenticated, cartRoutes);
+app.use("/carts", ensureAuthenticated, cartRoutes);
 
 // Swagger Docs
 const swaggerUi = require("swagger-ui-express");
