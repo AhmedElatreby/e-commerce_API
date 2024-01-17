@@ -14,7 +14,7 @@ const JwtStrategy = require('passport-jwt').Strategy,
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = process.env.SESSION_SECRET;
+opts.secretOrKey = process.env.SESSION_SECRET || 'defaultSecret' ;
 
 passport.use(new JwtStrategy(opts, async function (jwt_payload, done) {
   try {
