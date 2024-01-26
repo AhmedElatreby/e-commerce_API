@@ -4,11 +4,10 @@ import "./Item.css";
 const Item = (props) => {
   return (
     <div className="item">
-      <img src={props.image} alt="" />
-      <p>{props.name}</p>
-      <div className="item-prices">
-        <div className="item-price-new">{props.new_price}</div>
-        <div className="item-price-old">{props.old_price}</div>
+      <img src={props.imageDataUrl} alt={props.name} />
+      <div className="item-details">
+        <p> {props.name}</p>
+        <div className="item-price">£{props.price}</div>
       </div>
     </div>
   );

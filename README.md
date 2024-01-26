@@ -1,10 +1,13 @@
-E-Commerce App
-===
-Abstract: E-Commerce App made from scratch using PERN Stack 
+# E-Commerce App
+
+Abstract: E-Commerce App made from scratch using PERN Stack
+
 ## Description
-- 
+
+-
 
 ## Technology used
+
 - Javascript
 - React
 - Express JS
@@ -14,4 +17,5 @@ Abstract: E-Commerce App made from scratch using PERN Stack
 - JTW
 
 ## Backend
-[Title](backend/README.md)
+
+ [BackEnd](backend/README.md)

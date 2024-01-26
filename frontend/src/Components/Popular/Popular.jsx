@@ -1,39 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./Popular.css";
 import Item from "../Item/Item";
+import { usePopularData } from "../../api";
 
 const Popular = () => {
-  const [data, setData] = useState([]);
+  const { data, error } = usePopularData();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/products"); // Update the URL
-        const result = await response.json();
-        setData(result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
-    fetchData();
-  }, []);
   return (
     <div className="popular">
       <h1>POPULAR IN WOMAN</h1>
       <hr />
       <div className="popular-item">
-        {data.map((item, i) => {
-          return (
-            <Item
-              key={i}
-              id={item.product_id}
-              name={item.name}
-              price={item.price}
-              image={item.image}
-            />
-          );
-        })}
+        {data.map(({ product_id, name, price, imageDataUrl }, i) => (
+          <Item
+            key={i}
+            id={product_id}
+            name={name}
+            price={price}
+            imageDataUrl={imageDataUrl}
+          />
+        ))}
       </div>
     </div>
   );

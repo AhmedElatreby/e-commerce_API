@@ -1,14 +1,28 @@
-import React from 'react'
-import "./NewCollections.css"
+import React from "react";
+import "./NewCollections.css";
+import Item from "../Item/Item";
+import { usePopularData } from "../../api";
 
 const NewCollections = () => {
-  return (
-    <div className='new-collections'>
-      <h1>NEW COLLECTIONS</h1>
-      <hr/>
-      <div className='collection'></div>
-    </div>
-  )
-}
+  const { data, error } = usePopularData();
 
-export default NewCollections
+  return (
+    <div className="new-collections">
+      <h1>NEW COLLECTIONS</h1>
+      <hr />
+      <div className="collection">
+        {data.map(({ product_id, name, price, imageDataUrl }, i) => (
+          <Item
+            key={i}
+            id={product_id}
+            name={name}
+            price={price}
+            imageDataUrl={imageDataUrl}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default NewCollections;
