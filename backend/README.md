@@ -83,7 +83,8 @@ ___
 | /cart/:cartId/removeProduct | DELETE |  | Delete a product from cart |
 | cart/:cartId/checkout | POST |  | Calculate the total, checkout and clear the cart |
 
-
+## Swagger 
+![Alt text](swagger.svg)
 
 ## Directory Hierarchy
 

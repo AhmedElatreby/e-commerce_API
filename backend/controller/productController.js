@@ -43,7 +43,7 @@ exports.getProductById = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const newProduct = req.body;
-    const categoryId = req.body.category_id; 
+    const categoryId = req.body.category_id;
 
     // Check if the category exists
     const category = await CategoryModel.getCategoryById(categoryId);

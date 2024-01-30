@@ -5,12 +5,11 @@ export const fetchData = async () => {
     const response = await fetch(
       "http://localhost:3000/products?category=woman"
     );
-    console.log("woman response:", response);
+
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
     const result = await response.json();
-    console.log("woman data:", result);
 
     // Convert bytea data to Blob and create a URL
     return result.map((item) => {
@@ -29,7 +28,7 @@ export const fetchData = async () => {
     });
   } catch (error) {
     console.error("Error fetching data:", error.message);
-    throw error; // Rethrow the error for component-level handling
+    throw error;
   }
 };
 

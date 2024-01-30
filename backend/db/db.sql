@@ -76,5 +76,12 @@ CREATE TABLE new_collections (
     price DECIMAL(10, 2) NOT NULL,
     description VARCHAR(255)
 );
+
+-- update tabel and insert an image 
+
+
+UPDATE products
+SET image = pg_read_binary_file('D:\\web dev\\e-commerce2\\frontend\\src\\Components\\Assets\\product_25.png')::bytea
+WHERE product_id = 23;
 # Exit psql
 \ q

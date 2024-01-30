@@ -1,27 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Popular.css";
 import Item from "../Item/Item";
-import { usePopularData } from "../../api";
+import { usePopularData, fetchData } from "../../api_Woman";
 
-const Popular = () => {
+const Popular = (props) => {
   const { data, error } = usePopularData();
+  const [modifiedData, setModifiedData] = useState([]);
+
+  useEffect(() => {
+    const fetchDataAndSetData = async () => {
+      try {
+        const fetchedData = await fetchData();
+        setModifiedData(fetchedData || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchDataAndSetData();
+  }, []);
 
   if (error) {
     return <div>Error: {error}</div>;
   }
+
+  // Filter the data based on the category
+  const filteredData = modifiedData.filter(
+    (item) => item.category === props.category || item.category === undefined
+  );
 
   return (
     <div className="popular">
       <h1>POPULAR IN WOMAN</h1>
       <hr />
       <div className="popular-item">
-        {data.map(({ product_id, name, price, imageDataUrl }, i) => (
+        {filteredData.map((item, i) => (
           <Item
             key={i}
-            id={product_id}
-            name={name}
-            price={price}
-            imageDataUrl={imageDataUrl}
+            id={item.product_id}
+            name={item.name}
+            price={item.price}
+            imageDataUrl={item.imageDataUrl}
           />
         ))}
       </div>

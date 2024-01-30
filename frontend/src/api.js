@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
 
-export const fetchData = async () => {
+export const fetchData = async (category) => {
   try {
-    const response = await fetch("http://localhost:3000/products");
-    if (!response.ok) {
+    let url = "http://localhost:3000/products";
+
+     // Append category to the URL if provided
+     if (category) {
+      url += `?category=${encodeURIComponent(category)}`;
+    }
+
+    const response = await fetch(url);
+
+     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
     const result = await response.json();

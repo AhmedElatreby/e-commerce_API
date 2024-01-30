@@ -10,14 +10,14 @@ const NewCollections = () => {
     <div className="new-collections">
       <h1>NEW COLLECTIONS</h1>
       <hr />
-      <div className="collection">
-        {data.map(({ product_id, name, price, imageDataUrl }, i) => (
+      <div className="collections">
+        {data.map((item, i) => (
           <Item
             key={i}
-            id={product_id}
-            name={name}
-            price={price}
-            imageDataUrl={imageDataUrl}
+            id={item.product_id}
+            name={item.name}
+            price={item.price}
+            imageDataUrl={item.imageDataUrl}
           />
         ))}
       </div>
