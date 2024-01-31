@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./CSS/ShopCategory.css";
-import { fetchData } from "../api";
+import { fetchData } from "../Components/api/api";
 import dropdown_icon from "../Components/Assets/dropdown_icon.png";
 import Item from "../Components/Item/Item";
 
@@ -29,11 +29,7 @@ const ShopCategory = (props) => {
 
   return (
     <div className="shop-category">
-      <img
-        className="shopcategory-banner"
-        src={props.banner}
-        alt="banner image"
-      />
+      <img className="shopcategory-banner" src={props.banner} alt="banner" />
       <div className="shopcategory-indexSort">
         <p>
           <span>Showing 1-12</span> out of {data.length} products
@@ -53,9 +49,7 @@ const ShopCategory = (props) => {
           />
         ))}
       </div>
-      <div className="shopcategory-loadmore">
-        Explore More
-      </div>
+      <div className="shopcategory-loadmore">Explore More</div>
     </div>
   );
 };

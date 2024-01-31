@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./Popular.css";
 import Item from "../Item/Item";
-import { usePopularData, fetchData } from "../../api_Woman";
+import { usePopularData, fetchData } from "../api/api_Woman";
 
 const Popular = (props) => {
-  const { data, error } = usePopularData();
+  const { error } = usePopularData();
   const [modifiedData, setModifiedData] = useState([]);
 
   useEffect(() => {

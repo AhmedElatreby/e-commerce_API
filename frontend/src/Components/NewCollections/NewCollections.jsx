@@ -1,10 +1,10 @@
 import React from "react";
 import "./NewCollections.css";
 import Item from "../Item/Item";
-import { usePopularData } from "../../api";
+import { usePopularData } from "../../Components/api/api";
 
 const NewCollections = () => {
-  const { data, error } = usePopularData();
+  const { data } = usePopularData();
 
   return (
     <div className="new-collections">
