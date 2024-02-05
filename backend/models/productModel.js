@@ -21,7 +21,21 @@ const getProductsByCategory = async (category) => {
 
 // Retrieve a single product by ID
 const getProductById = async (productId) => {
-  const query = "SELECT * FROM Products WHERE product_id = $1";
+  const query = `
+    SELECT 
+      Products.*,
+      ARRAY_AGG(Categories.category_name) AS category_names
+    FROM 
+      Products
+    LEFT JOIN 
+      Product_Categories ON Products.product_id = Product_Categories.product_id
+    LEFT JOIN 
+      Categories ON Product_Categories.category_id = Categories.category_id
+    WHERE 
+      Products.product_id = $1
+    GROUP BY 
+      Products.product_id
+  `;
   const result = await db.oneOrNone(query, [productId]);
   return result;
 };

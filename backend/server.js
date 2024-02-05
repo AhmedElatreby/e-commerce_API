@@ -12,13 +12,11 @@ const pool = require("./db/db");
 const { ensureAuthenticated } = require("./config/passportConfig");
 const passportConfig = require("./config/passportConfig");
 
-
 passportConfig.initializePassport(passport);
 
 const app = express();
 
 app.set("view engine", "ejs");
-
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -66,7 +64,7 @@ const cartRoutes = require("./routes/cartRoutes");
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-app.use("/dashboard",  dashboardRoutes);
+app.use("/dashboard", dashboardRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/orders", orderRoutes);
@@ -77,18 +75,18 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
 
 const swaggerOptions = {
-  swaggerDefinition:{
+  swaggerDefinition: {
     openapi: "3.0.1",
     info: {
       title: "E-Commerce Shop - Project",
-      version: '1.0.0',
+      version: "1.0.0",
     },
   },
   apis: ["./routes/*.js"],
 };
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Additional routes
 app.use((req, res) => {

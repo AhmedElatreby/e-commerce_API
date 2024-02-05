@@ -1,55 +1,73 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import "./CSS/ShopCategory.css";
-import { fetchData } from "../Components/api/api";
-import dropdown_icon from "../Components/Assets/dropdown_icon.png";
+// ShopCategory.jsx
+import React, { useContext, useEffect, useState } from "react";
+import { ShopContext } from "../Context/ShopContext";
 import Item from "../Components/Item/Item";
 
 const ShopCategory = (props) => {
-  const { category } = useParams();
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
+  const { fetchDataFromContext, fetchData, updateContextData } =
+    useContext(ShopContext);
+  const { category } = props;
+  const [loading, setLoading] = useState(true);
+  const [dataFetched, setDataFetched] = useState(false);
 
   useEffect(() => {
-    const fetchDataAndSetData = async () => {
+    const fetchCategoryData = async () => {
       try {
-        const modifiedData = await fetchData(category || props.category);
-        setData(modifiedData || []);
+        console.log(
+          "Before fetch - fetchDataFromContext:",
+          fetchDataFromContext
+        );
+
+        // Check if data is already fetched
+        if (!dataFetched) {
+          const data = await fetchData(category);
+          console.log("Fetched data in ShopCategory:", data);
+
+          // Check if data is an array before updating context
+          if (Array.isArray(data)) {
+            updateContextData(data);
+          }
+
+          // Set dataFetched to true to avoid refetching
+          setDataFetched(true);
+        }
+
+        setLoading(false);
       } catch (error) {
-        setError(error.message);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchDataAndSetData();
-  }, [category, props.category]);
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+    fetchCategoryData();
+  }, [
+    fetchData,
+    updateContextData,
+    fetchDataFromContext,
+    category,
+    dataFetched,
+  ]);
 
   return (
-    <div className="shop-category">
-      <img className="shopcategory-banner" src={props.banner} alt="banner" />
-      <div className="shopcategory-indexSort">
-        <p>
-          <span>Showing 1-12</span> out of {data.length} products
-        </p>
-        <div className="shopcategory-sort">
-          Sort by <img src={dropdown_icon} alt="" />
-        </div>
-      </div>
-      <div className="shopcategory-product">
-        {data.map((item) => (
-          <Item
-            key={item.product_id}
-            id={item.product_id}
-            name={item.name}
-            price={item.price}
-            imageDataUrl={item.imageDataUrl}
-          />
-        ))}
-      </div>
-      <div className="shopcategory-loadmore">Explore More</div>
+    <div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          {fetchDataFromContext && fetchDataFromContext.length > 0 ? (
+            fetchDataFromContext.map((item) => (
+              <Item
+                key={item.product_id}
+                id={item.product_id}
+                imageDataUrl={item.imageDataUrl}
+                name={item.name}
+                price={item.price}
+              />
+            ))
+          ) : (
+            <p>No items available.</p>
+          )}
+        </>
+      )}
     </div>
   );
 };

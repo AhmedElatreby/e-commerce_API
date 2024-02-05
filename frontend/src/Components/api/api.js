@@ -4,20 +4,26 @@ export const fetchData = async (category) => {
   try {
     let url = "http://localhost:3000/products";
 
-     // Append category to the URL if provided
-     if (category) {
+    // Append category to the URL if provided
+    if (category) {
       url += `?category=${encodeURIComponent(category)}`;
     }
 
     const response = await fetch(url);
 
-     if (!response.ok) {
-      throw new Error("Failed to fetch data");
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data. Status: ${response.status}`);
     }
+
     const result = await response.json();
 
+    // Check if the expected data is available in the response
+    if (!Array.isArray(result)) {
+      throw new Error("Data is not in the expected format");
+    }
+
     // Convert bytea data to Blob and create a URL
-    return result.map((item) => {
+    const modifiedData = result.map((item) => {
       if (item.image && item.image.data) {
         const byteCharacters = new Uint8Array(item.image.data);
         const blob = new Blob([byteCharacters], { type: "image/png" });
@@ -31,9 +37,11 @@ export const fetchData = async (category) => {
         return item;
       }
     });
+
+    return modifiedData;
   } catch (error) {
     console.error("Error fetching data:", error.message);
-    throw error; // Rethrow the error for component-level handling
+    throw error;
   }
 };
 
