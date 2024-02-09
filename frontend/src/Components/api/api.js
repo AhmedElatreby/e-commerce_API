@@ -4,7 +4,6 @@ export const fetchData = async (category) => {
   try {
     let url = "http://localhost:3000/products";
 
-    // Append category to the URL if provided
     if (category) {
       url += `?category=${encodeURIComponent(category)}`;
     }
@@ -16,8 +15,8 @@ export const fetchData = async (category) => {
     }
 
     const result = await response.json();
+    console.log("Fetched data in fetchData:", result);
 
-    // Check if the expected data is available in the response
     if (!Array.isArray(result)) {
       throw new Error("Data is not in the expected format");
     }

@@ -1,69 +1,56 @@
-import React, { useContext, useEffect, useState } from "react";
-import { ShopContext } from "../Context/ShopContext";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { fetchData } from "../Components/api/api";
 import Breadcrum from "../Components/Breadcrums/Breadcrum";
 
 const Product = () => {
-  const { fetchDataFromContext, updateContextData, fetchData } =
-    useContext(ShopContext);
   const { productId } = useParams();
-  console.log("ProductId:", productId);
-
-  const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchProductData = async () => {
     try {
-      console.log("Before fetch - fetchDataFromContext:", fetchDataFromContext);
+      const contextData = await fetchData();
+      console.log("Before fetch - fetchDataFromContext:", contextData);
 
-      // Fetch data only if the specific product is not available in context
-      if (
-        !fetchDataFromContext.some(
-          (item) => item.product_id === Number(productId)
-        )
-      ) {
-        const data = await fetchData();
-        console.log("Fetched data in Product:", data);
+      if (contextData && Array.isArray(contextData)) {
+        console.log("After fetch - fetchDataFromContext:", contextData);
+        console.log("ProductId:", productId);
 
-        // Check if data is an array before updating context
-        if (data && Array.isArray(data)) {
-          // Update context only once after fetching the data
-          updateContextData(data);
-
-          // Find and set the product based on the productId
-          const foundProduct = data.find(
-            (item) => item.product_id === Number(productId)
-          );
-
-          setProduct(foundProduct);
-          setLoading(false);
-        } else {
-          // Handle the case where fetching data fails
-          console.error(
-            "Error fetching data: Data is not an array or is undefined"
-          );
-          setLoading(false);
-          return;
-        }
-      } else {
-        // If the product is already in context, set it directly
-        const foundProduct = fetchDataFromContext.find(
+        const foundProduct = contextData.find(
           (item) => item.product_id === Number(productId)
         );
-        setProduct(foundProduct);
-        setLoading(false);
-      }
 
-      console.log("After fetch - fetchDataFromContext:", fetchDataFromContext);
+        console.log("Found Product:", foundProduct);
+
+        if (foundProduct) {
+          setProduct(foundProduct);
+        } else {
+          console.error("Error: Product not found");
+        }
+      } else {
+        console.error(
+          "Error: Data from context is not an array or is undefined"
+        );
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setLoading(false);
+    } finally {
+      setLoading(false); 
     }
   };
 
   useEffect(() => {
     fetchProductData();
-  }, [fetchData, updateContextData, fetchDataFromContext, productId]);
+  }, [productId]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!product) {
+    return <p>Product not found</p>;
+  }
 
   return (
     <div>
