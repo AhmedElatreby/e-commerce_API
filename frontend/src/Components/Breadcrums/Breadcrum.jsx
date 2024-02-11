@@ -64,11 +64,11 @@ const Breadcrum = (props) => {
   console.log("Category:", product.category);
 
   return (
-    <div className="Breadcrum">
+    <div className="breadcrum">
       HOME <img src={arrow_icon} alt="item" />
       SHOP <img src={arrow_icon} alt="item" />
-      {category}
-      <img src={arrow_icon} alt="item" />
+      {/* {category} */}
+      {/* <img src={arrow_icon} alt="item" /> */}
       {product.name}
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchData } from "../Components/api/api";
 import Breadcrum from "../Components/Breadcrums/Breadcrum";
+import ProductDisplay from "../Components/ProductDisplay/ProductDisplay";
 
 const Product = () => {
   const { productId } = useParams();
@@ -36,7 +37,7 @@ const Product = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -61,6 +62,7 @@ const Product = () => {
           {product ? <Breadcrum product={product} /> : <p>Product not found</p>}
         </>
       )}
+      <ProductDisplay product={product} />
     </div>
   );
 };
