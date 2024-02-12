@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../Context/ShopContext";
 import Item from "../Components/Item/Item";
-import { useParams } from "react-router-dom";
 import "../Pages/CSS/ShopCategory.css";
 import { fetchData } from "../Components/api/api";
 import dropdown_icon from "../Components/Assets/dropdown_icon.png";
