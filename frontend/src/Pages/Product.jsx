@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { fetchData } from "../Components/api/api";
 import Breadcrum from "../Components/Breadcrums/Breadcrum";
 import ProductDisplay from "../Components/ProductDisplay/ProductDisplay";
+import DescriptionBox from "../Components/DescriptionBox/DescriptionBox";
 
 const Product = () => {
   const { productId } = useParams();
@@ -63,6 +64,7 @@ const Product = () => {
         </>
       )}
       <ProductDisplay product={product} />
+      <DescriptionBox />
     </div>
   );
 };
